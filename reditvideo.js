@@ -1,10 +1,3 @@
-// To do list
-// 1- create the scriopt to fetech the source sourceCode
-// 2- clean the sourceCode
-// 3 -create wbe interface for isMainThread
-// 4- optimize the interface
-// this is a script to extract reddit video url and share theme
-
 //https://www.reddit.com/r/WTF/comments/i8wrhj/ratatouille_cosplay/
 
 const PROXY = 'https://arcane-stream-72469.herokuapp.com/'; //temporary source URL
@@ -57,7 +50,7 @@ let finalcut = function getTheLink() {
 // check Link status
 let stat;
 function isitLive(hmm){
-    fetch(hmm).then(function (Response) {
+    fetch(PROXY+hmm).then(function (Response) {
     if (Response.status === 200){
         listLinks();
     } else {

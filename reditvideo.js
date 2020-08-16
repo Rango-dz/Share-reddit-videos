@@ -1,3 +1,10 @@
+// To do list
+// 1- create the scriopt to fetech the source sourceCode
+// 2- clean the sourceCode
+// 3 -create wbe interface for isMainThread
+// 4- optimize the interface
+// this is a script to extract reddit video url and share theme
+
 //https://www.reddit.com/r/WTF/comments/i8wrhj/ratatouille_cosplay/
 
 const PROXY = 'https://arcane-stream-72469.herokuapp.com/'; //temporary source URL
@@ -94,10 +101,15 @@ function listLinks() {
     let listI = document.getElementById('thumb');
     let listT = document.getElementById('rtitle');
     let listR = document.getElementById('rlinks');
-    
+    let rvideo = document.getElementById('Rvideo');
+    let rfield = document.getElementById('rfield');
+    let newfield = document.createTextNode(finalVid);
+
+    rvideo.classList.toggle("hidden");
     listI.setAttribute('src', redLinkThumb);
     listR.setAttribute('href', finalVid);
     listR.setAttribute('title', redLinkTitle);
     listR.innerHTML = redLinkTitle;
     listT.innerHTML = redLinkTitle;
+    rfield.appendChild(newfield);
 }

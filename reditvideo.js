@@ -57,7 +57,7 @@ let finalcut = function getTheLink() {
 // check Link status
 let stat;
 function isitLive(hmm){
-    fetch(hmm).then(function (Response) {
+    fetch(PROXY+hmm).then(function (Response) {
     if (Response.status === 200){
         listLinks();
     } else {
@@ -101,10 +101,15 @@ function listLinks() {
     let listI = document.getElementById('thumb');
     let listT = document.getElementById('rtitle');
     let listR = document.getElementById('rlinks');
-    
+    let rvideo = document.getElementById('Rvideo');
+    let rfield = document.getElementById('rfield');
+    let newfield = document.createTextNode(finalVid);
+
+    rvideo.classList.toggle("hidden");
     listI.setAttribute('src', redLinkThumb);
     listR.setAttribute('href', finalVid);
     listR.setAttribute('title', redLinkTitle);
     listR.innerHTML = redLinkTitle;
     listT.innerHTML = redLinkTitle;
+    rfield.appendChild(newfield);
 }

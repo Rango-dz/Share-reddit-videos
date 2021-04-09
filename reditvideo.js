@@ -1,16 +1,15 @@
 // To do list
 // 1- create the scriopt to fetech the source sourceCode
 // 2- clean the sourceCode
-// 3 -create wbe interface for isMainThread
+// 3 -create web interface for isMainThread
 // 4- optimize the interface
 // this is a script to extract reddit video url and share theme
-
 //https://www.reddit.com/r/WTF/comments/i8wrhj/ratatouille_cosplay/
-
 const PROXY = 'https://arcane-stream-72469.herokuapp.com/'; //temporary source URL
 const removePart = /HLSPlaylist.m3u8\S*/g; 
 const Olink = document.getElementById('Olink');
 const Obutton = document.getElementById('Obutton');
+const myHeaders = new Headers({'Content-Type': 'text/html'})
 let redLink;
 let fetchSource;
 let redLinkTitle;
@@ -20,7 +19,16 @@ var finalVid;
 
 //Script to remotely fetesh the source code using fetsh() and DOMparser()
 let finalcut = function getTheLink() {
-    fetch(fetchSource).then(function (response) {
+    if (!('fetch' in window)) {
+     console.log('Fetch API not found, try including the polyfill');
+        return;
+        }   
+    fetch(fetchSource, {
+	method: 'get', 
+	mode: 'cors', 
+	redirect: 'follow',
+	headers: myHeaders
+}).then(function (response) {
 
             // The API call was successful!
             if(!response.ok) {
@@ -32,20 +40,17 @@ let finalcut = function getTheLink() {
         }).then(function (html) {
             // Getting the source Code and parse it into HTML 
             let parser = new DOMParser();
-            let doc = parser.parseFromString(html, 'text/html')
-            console.log(doc);
+            let doc = parser.parseFromString(html, 'text/html');
             let oheader;
             // check for Normal links
             oheader = doc.querySelector('script[type="application/ld+json"]').innerText;
             let sheader = JSON.parse(oheader);
             let slink = sheader.contentUrl;
-            finalVid = slink.replace(removePart, 'DASH_720.mp4');
+            isitLive(slink);
+            //the result (Original video URL)
             redLinkTitle = sheader.name;
             redLinkThumb = sheader.thumbnailUrl;
 
-            console.log(redLinkTitle);
-            console.log(redLinkThumb);
-            console.log(finalVid);
             isitLive(finalVid);
 
         }).catch(function (err) {
@@ -54,17 +59,24 @@ let finalcut = function getTheLink() {
         });
     } 
 
+
+// Make a request for a user with a given ID
+
+
 // check Link status
-let stat;
-function isitLive(hmm){
-    fetch(PROXY+hmm).then(function (Response) {
-    if (Response.status === 200){
-        listLinks();
-    } else {
-    finalVid = slink.replace('DASH_720.mp4', 'DASH_480.mp4');
-    isitLive(finalVid);
-    }    
-    })
+function isitLive(hmm) {
+    let checkUrl = ['DASH_1080.mp4', 'DASH_720.mp4', 'DASH_480.mp4', 'DASH_360.mp4'];
+    for (let i = 0; i <= checkUrl.length; i++) {
+
+        let mutatedUrl = hmm.replace(removePart, i);
+        fetch(PROXY+mutatedUrl).then(function (Response) {
+            if (Response.status === 200) {
+                finalVid = mutatedUrl;
+                listLinks();
+            }
+        })
+        break;
+   }        
 }
 
 
